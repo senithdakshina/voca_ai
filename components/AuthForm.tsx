@@ -18,6 +18,15 @@ import { Input } from "@/components/ui/input"
 const formSchema = z.object({
   username: z.string().min(2).max(50),
 })
+
+// define allowed modes
+type Mode = "sign-up" | "sign-in";
+
+// props interface
+interface AuthFormProps {
+  type: Mode;
+  // add other props here if needed
+}
 const AuthForm = () => {
     // 1. Define your form.
   const form = useForm<z.infer<typeof formSchema>>({
