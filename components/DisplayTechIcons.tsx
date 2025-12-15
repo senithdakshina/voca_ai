@@ -30,4 +30,5 @@ const DisplayTechIcons = async ({ techStack }: TechIconProps) => {
   );
 };
 
+
 export default DisplayTechIcons;
