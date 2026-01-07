@@ -1,16 +1,19 @@
 import React from "react";
 
 import Image from "next/image";
-
-enum CallStatus{
-  INACTIVE = 'INACTIVE',
-  CONNECTING  = 'CONNECTING',
-  ACTIVE = 'ACTIVE',
-  FINISHED = 'FINISHED',
+import { cn } from "@/lib/utils";
+enum CallStatus {
+  INACTIVE = "INACTIVE",
+  CONNECTING = "CONNECTING",
+  ACTIVE = "ACTIVE",
+  FINISHED = "FINISHED",
 }
 const Agent = ({ userName }: AgentProps) => {
-  const callStatus = CallStatus.ACTIVE
+  const callStatus = CallStatus.ACTIVE;
   const isSpeaking = true;
+  const messages = ["What`s your name?, My name is senith!, Nice to meet you"];
+  const lastMessage = messages[messages.length-1]
+
   return (
     <>
       <div className="call-view">
@@ -30,26 +33,39 @@ const Agent = ({ userName }: AgentProps) => {
 
         <div className="card-border">
           <div className="card-content">
-          <Image
-            src="/user-avatar.png"
-            alt="user avatar"
-            width={540}
-            height={540}
-            className="rounded-full object-cover size-[120px]"
-          ></Image>
-          <h3>{userName}</h3>
+            <Image
+              src="/user-avatar.png"
+              alt="user avatar"
+              width={540}
+              height={540}
+              className="rounded-full object-cover size-[120px]"
+            ></Image>
+            <h3>{userName}</h3>
           </div>
         </div>
       </div>
 
       <div className="w-full flex justify-center">
-        {callStatus !== 'ACTIVE' ? ( 
-          <button>
+        {callStatus !== "ACTIVE" ? (
+          <button className="relative btn-call ">
+            <span
+              className={cn(
+                "absolute animate-ping rounded-full opacity-75",
+                (callStatus != "CONNECTING") & "hidden"
+              )}
+            >
+              {callStatus === "INACTIVE" || callStatus === "FINISHED"
+                ? "CALL"
+                : ". . ."}{" "}
+            </span>
+
             <span>
-              {callStatus === 'INACTIVE' || callStatus === 'FINISHED' ? 'call' : '. . .' }
+              {callStatus === "INACTIVE" || callStatus === "FINISHED"
+                ? "CALL"
+                : ". . ."}
             </span>
           </button>
-        ): (
+        ) : (
           <button className="btn-disconnect">END</button>
         )}
       </div>
