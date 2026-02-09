@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { error } from "console";
+import { interviewer } from "@/constants";
 
 import { vapi } from "@/lib/vapi.sdk";
 enum CallStatus {
@@ -19,19 +20,43 @@ interface SavedMessage {
   content: string;
 }
 
-const Agent = ({ userName, userId, type ,questions}: AgentProps) => {
+const Agent = ({ userName, userId, type ,questions,interviewId}: AgentProps) => {
   const router = useRouter();
   const [isSpeaking, setIsSpeaking] = useState(false);
   const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
   const [messages, setMessages] = useState<SavedMessage[]>([]);
 
-  // useEffect(()=>{...},[])
-  useEffect(() => {
-    if (callStatus === CallStatus.FINISHED) router.push("/");
-  }, [messages, callStatus, type, userId]);
+  // useEffect(()=>{...},[])\
+const handleGenerateFeedback = async(messages:SavedMessage[]) => {
+  console.log("Generating feedback with messages");
+  const{success, id }={
+    success:true,
+    id: 'feedback-id'
+  }
+
+  if(success && id){
+    router.push(`/interview/${interviewId}/feedback/`);
+  }else{
+    console.log("Error generating feedback");
+    router.push('/');
+  }
+
+}
+
+useEffect(() => {
+  if (callStatus !== CallStatus.FINISHED) return;
+
+  if (type === 'generate') {
+    router.push('/');
+  } else {
+    handleGenerateFeedback(messages);
+  }
+}, [callStatus, type, messages,userId]);
+
 
  const handleCall = async () => {
     setCallStatus(CallStatus.CONNECTING);
+ 
 
     if (type === "generate") {
       await vapi.start(
@@ -54,11 +79,11 @@ const Agent = ({ userName, userId, type ,questions}: AgentProps) => {
           .join("\n");
       }
 
-      // await vapi.start(interviewer, {
-      //   variableValues: {
-      //     questions: formattedQuestions,
-      //   },
-      // });
+      await vapi.start(interviewer, {
+        variableValues: {
+          questions: formattedQuestions,
+        },
+      });
     }
   };
   const handleDisconnect = async () => {
