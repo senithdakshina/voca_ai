@@ -6,9 +6,10 @@ import { Button } from "./ui/button";
 import Link from "next/link";
 import DisplayTechIcons from "./DisplayTechIcons";
 import { CardSim, Facebook } from "lucide-react";
+import { id } from "zod/v4/locales";
 const InterviewCard = ({
-  interviewid,
-  userid,
+  id,
+  userId,
   role,
   type,
   techstack,
@@ -53,7 +54,7 @@ const InterviewCard = ({
         <div className="flex flex-row justify-between">
           <DisplayTechIcons techStack={techstack} ></DisplayTechIcons>
           <Button className="btn-primary">
-            <Link href={feedback ? `/interview/${interviewid}/feedback` : `/interview/${interviewid}`}>{feedback ? 'Check Feedback' : 'View'}</Link>
+            <Link href={feedback ? `/interview/${id}/feedback` : `/interview/${id}`}>{feedback ? 'Check Feedback' : 'View'}</Link>
           </Button>
         </div>
       </div>
